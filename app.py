@@ -4,7 +4,7 @@ from pages.home.home import home_md
 from pages.meds.med import Medicine
 from api import Cody
 
-symptoms = "Tell us the symptoms"
+symptoms = ""  # Initialize as an empty string
 response = ""
 
 def button_handler(id=None):
@@ -17,11 +17,12 @@ def button_handler(id=None):
 def input_handler():
     return """
 <|part|
-<|Tell us your cats symptoms|{symptoms}|input|>
+<|{symptoms}|input|label=Tell us your cat's symptoms|>
 |>
 """
 
 def prompt_chef(symptoms, medicine):
+    print(symptoms)
     return f"My cat is suffering from {symptoms}. Can my cat take {medicine}?"
 
 def display_response():
@@ -33,12 +34,15 @@ def display_response():
 
 def on_button_action(state, id=None):
     pookie = Cody()
-    if id == '1' and state.symptoms:
-        state.response = pookie.get_response(prompt_chef(state.symptoms, 'Catspirin'))
-    elif id == '2' and state.symptoms:
-        state.response = pookie.get_response(prompt_chef(state.symptoms, 'Whiskerprofen'))
-    elif id == '3' and state.symptoms:
-        state.response = pookie.get_response(prompt_chef(state.symptoms, 'Meowtamin C'))
+    if state.symptoms:
+        if id == '1':
+            state.response = pookie.get_response(prompt_chef(state.symptoms, 'Catspirin'))
+        elif id == '2':
+            state.response = pookie.get_response(prompt_chef(state.symptoms, 'Whiskerprofen'))
+        elif id == '3':
+            state.response = pookie.get_response(prompt_chef(state.symptoms, 'Meowtamin C'))
+    else:
+        state.response = "Please enter your cat's symptoms first."
 
 pages = {
     '/': root_md,
